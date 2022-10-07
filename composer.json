@@ -1,0 +1,14 @@
+{
+  "name": "zafarjonovich/yii-translatable",
+  "minimum-stability": "dev",
+  "type": "package",
+  "require": {
+    "php": ">=7.4.0",
+    "yiisoft/yii2": "^2.0.13",
+  },
+  "autoload": {
+    "psr-4": {
+      "zafarjonovich\\Yii2Translatable\\": "src"
+    }
+  }
+}
