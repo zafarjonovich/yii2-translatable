@@ -32,7 +32,6 @@ class TranslatableBehaviour extends Behavior
     protected function encode($attribute)
     {
         $value = $this->owner->{$attribute};
-
         if (!is_array($value)) {
             $value = [];
         }
