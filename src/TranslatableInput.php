@@ -30,9 +30,9 @@ class TranslatableInput extends InputWidget
         return "$this->attribute[$language]";
     }
 
-    protected function initInput($language, $label)
+    protected function initInput($language, $label, $options = [])
     {
-        $field = $this->field->form->field($this->model, "{$this->attribute}[$language]");
+        $field = $this->field->form->field($this->model, "{$this->attribute}[$language]",$options);
 
         if ($this->input == 'textInput') {
             $field->textInput($this->inputOptions);
@@ -65,7 +65,7 @@ class TranslatableInput extends InputWidget
         foreach ($this->getLanguages() as $language => $label) {
             $inputs[] = [
                 'label' => $label,
-                'content' => $this->initInput($language, ''),
+                'content' => $this->initInput($language, $label,['template'=>'{input}{hint}{error}']),
             ];
         }
         return $inputs;
