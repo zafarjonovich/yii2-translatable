@@ -3,13 +3,19 @@
 namespace zafarjonovich\Yii2Translatable;
 
 use yii\bootstrap4\Html;
+use yii\bootstrap4\Tabs;
 use yii\widgets\InputWidget;
+use zafarjonovich\Yii2Translatable\TranslatableInputEnum;
+
 
 class TranslatableInput extends InputWidget
 {
+
     public $input = 'textInput';
 
     public $inputOptions = [];
+
+    public $type;
 
     protected function getLanguages()
     {
@@ -24,32 +30,67 @@ class TranslatableInput extends InputWidget
         return "$this->attribute[$language]";
     }
 
-    protected function initInput($language,$label)
+    protected function initInput($language, $label)
     {
-        $field = $this->field->form->field($this->model,"{$this->attribute}[$language]");
+        $field = $this->field->form->field($this->model, "{$this->attribute}[$language]");
 
         if ($this->input == 'textInput') {
             $field->textInput($this->inputOptions);
         } else if ($this->input == 'textarea') {
             $field->textarea($this->inputOptions);
         } else {
-            $field->widget($this->input,$this->inputOptions);
+            $field->widget($this->input, $this->inputOptions);
         }
 
         $field->label($label);
         return $field;
     }
 
+    protected function getVertical()
+    {
+        $inputs = [];
+
+        foreach ($this->getLanguages() as $language => $label) {
+            $inputs[] = $this->initInput($language, $label);
+        }
+
+        return $inputs;
+
+    }
+
+    protected function getHorizantal()
+    {
+        $inputs = [];
+
+        foreach ($this->getLanguages() as $language => $label) {
+            $inputs[] = [
+                'label' => $label,
+                'content' => $this->initInput($language, ''),
+            ];
+        }
+        return $inputs;
+
+    }
+
     public function run()
     {
         parent::run();
 
-        $inputs = [];
+        if ($this->type == TranslatableInputEnum::TYPE_HORIZANTAL) {
 
-        foreach ($this->getLanguages() as $language => $label) {
-            $inputs[] = $this->initInput($language,$label);
+            return Tabs::widget([
+                'options' => [
+                    'class' => 'nav-tabs',
+                    'style' => 'margin-bottom: 15px',
+                ],
+                'items' => $this->getHorizantal(),
+            ]);
+        } else {
+
+            $inputs = $this->getVertical();
+
+            return implode("\n", $inputs);
         }
 
-        return implode("\n",$inputs);
     }
 }
