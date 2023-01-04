@@ -13,7 +13,11 @@ class TranslatableColumn extends Column
 
     protected function renderDataCellContent($model, $key, $index)
     {
-        $data = json_decode($model->{$this->attribute}, true);
+        $data = $model->{$this->attribute};
+
+        if (!is_array($data)) {
+            $data = json_decode($data, true);
+        }
 
         $lines = [];
 
