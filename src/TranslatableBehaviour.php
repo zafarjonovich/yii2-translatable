@@ -36,7 +36,7 @@ class TranslatableBehaviour extends Behavior
             $value = [];
         }
 
-        $this->owner->{$attribute} = json_encode($value);
+        $this->owner->{$attribute} = json_encode($value,JSON_UNESCAPED_UNICODE);
     }
 
     public function decodeTranslation()
