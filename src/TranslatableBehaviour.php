@@ -49,7 +49,7 @@ class TranslatableBehaviour extends Behavior
     protected function decode($attribute)
     {
         $value = $this->owner->{$attribute};
-        $value = json_decode($value,true);
+        $value = json_decode($value ?? "",true);
 
         if ($value === null) {
             $value = [];
