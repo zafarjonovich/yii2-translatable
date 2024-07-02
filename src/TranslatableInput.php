@@ -2,10 +2,8 @@
 
 namespace zafarjonovich\Yii2Translatable;
 
-use yii\bootstrap4\Html;
 use yii\bootstrap4\Tabs;
 use yii\widgets\InputWidget;
-use zafarjonovich\Yii2Translatable\TranslatableInputEnum;
 
 
 class TranslatableInput extends InputWidget
@@ -16,6 +14,8 @@ class TranslatableInput extends InputWidget
     public $inputOptions = [];
 
     public $type;
+
+    public $tabOptions = [];
 
     protected function getLanguages()
     {
@@ -32,7 +32,7 @@ class TranslatableInput extends InputWidget
 
     protected function initInput($language, $label, $options = [])
     {
-        $field = $this->field->form->field($this->model, "{$this->attribute}[$language]",$options);
+        $field = $this->field->form->field($this->model, "{$this->attribute}[$language]", $options);
 
         if ($this->input == 'textInput') {
             $field->textInput($this->inputOptions);
@@ -41,7 +41,6 @@ class TranslatableInput extends InputWidget
         } else {
             $field->widget($this->input, $this->inputOptions);
         }
-
         $field->label($label);
         return $field;
     }
@@ -55,7 +54,6 @@ class TranslatableInput extends InputWidget
         }
 
         return $inputs;
-
     }
 
     protected function getHorizantal()
@@ -65,32 +63,27 @@ class TranslatableInput extends InputWidget
         foreach ($this->getLanguages() as $language => $label) {
             $inputs[] = [
                 'label' => $label,
-                'content' => $this->initInput($language, $label,['template'=>'{input}{hint}{error}']),
+                'content' => $this->initInput($language, $label, ['template' => '{input}{hint}{error}']),
             ];
         }
         return $inputs;
-
     }
 
     public function run()
     {
         parent::run();
-
         if ($this->type == TranslatableInputEnum::TYPE_HORIZANTAL) {
-
             return Tabs::widget([
-                'options' => [
+                'options' => array_merge([
                     'class' => 'nav-tabs',
                     'style' => 'margin-bottom: 15px',
-                ],
+                    'id' => 'nav-tabs-' . rand(10000, 99999)
+                ], $this->tabOptions),
                 'items' => $this->getHorizantal(),
             ]);
         } else {
-
             $inputs = $this->getVertical();
-
             return implode("\n", $inputs);
         }
-
     }
 }
